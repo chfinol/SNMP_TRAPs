@@ -35,15 +35,15 @@ class Polish:
                 cls.huaBGPM2(oid,val,device)
             elif oid.find('1.3.6.1.2.1.14.10.1.6.') != -1:
                 log.debug(f'oids: [{oids}] \t value: {val} \t device: {device}')
-                cls.OSPF(oid,val,device)
+                cls.ospfFormat(oid,val,device)
             elif oid.find('1.3.6.1.2.1.15.3.1.2.') != -1:
-                cls.BGPIPv4(oid,val,device)
+                cls.bgp4Format(oid,val,device)
             elif oid.find('1.3.6.1.4.1.2636.3.1.13.1.6.') != -1:
                 cls.chassis(device)    
             elif oid.find('1.3.6.1.4.1.2636.5.1.1.2.1.1.1.2.0.2') != -1 and len(oid) >= 110:
-                cls.BGPM2(oid,val,device)
+                cls.bgp6Format(oid,val,device)
             elif oid.find('1.3.6.1.2.1.191.1.9.1.8.') != -1:
-                cls.OSPFv3(oid,val,device) 
+                cls.ospf3Format(oid,val,device) 
         except Exception as e:
             log.error(e)
 
@@ -73,7 +73,7 @@ class Polish:
                 print(f'IP: {device}\nHostname: {hostname}\nPuerto: {namePort}\nDescripcion: {descriptionPort}\nEstado: {state}')
             
     @classmethod 
-    def OSPF(cls, oid, val, device):
+    def ospfFormat(cls, oid, val, device):
         snmp1 = SNMP(device)
         hostname = snmp1.getValue()
         state = ''
@@ -88,7 +88,7 @@ class Polish:
         print(f'IP: {device}\nHostname: {hostname}\nSesion OSPF {state}\nNeighbor: {vecino}')
         
     @classmethod
-    def BGPIPv4(cls,oid,val,device):
+    def bgp4Format(cls,oid,val,device):
             neighbor = str(oid).replace('1.3.6.1.2.1.15.3.1.2.','')
             if str(val) != '6':
                 status = 'DOWN'
@@ -118,7 +118,7 @@ class Polish:
 
 
     @classmethod
-    def BGPM2(cls,oid,val,device):
+    def bgp6Format(cls,oid,val,device):
         status = ''
         host = str(device)
         snmp = SNMP(device)
@@ -141,7 +141,7 @@ class Polish:
             Polish.cacheBGPv6.pop(f'{indice}')
             
     @classmethod
-    def OSPFv3(cls,oid,val,device):
+    def ospf3Format(cls,oid,val,device):
         state = ''
         if str(val) != '8':
             state = 'DOWN'
